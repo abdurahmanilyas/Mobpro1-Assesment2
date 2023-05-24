@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">Stock Mobile</string>
+    <string name="sell">Sell</string>
+    <string name="quantity">Total Stock:</string>
+    <string name="quantity_req">Total Stock <font color='#FF0000'>*</font></string>
+    <string name="item_name_req">Product Name <font color='#FF0000'>*</font></string>
+    <string name="item_price_req">Price <font color='#FF0000'>*</font></string>
+    <string name="save_action">Save</string>
+    <string name="item_detail_fragment_title">Detail Product</string>
+    <string name="add_fragment_title">Add Product</string>
+    <string name="edit_fragment_title">Edit Product</string>
+    <string name="price">Price</string>
+    <string name="quantity_in_stock">Stock</string>
+    <string name="item">Item</string>
+    <string name="delete">Delete</string>
+    <string name="delete_question">Are You Sure You Want to Delete Product?</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
+    <string name="edit_item">Edit Product</string>
+    <string name="add_new_item">Add New Product</string>
+</resources>
