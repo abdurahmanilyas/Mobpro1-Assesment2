@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
+import androidx.work.*
+import com.assesment2.stockmobile.network.UpdateWorker
 
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
@@ -19,6 +21,18 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         navController = navHostFragment.navController
 
         setupActionBarWithNavController(this, navController)
+
+        val constraints: Constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.UNMETERED)
+            .setRequiresCharging(true)
+            .build()
+
+
+        val myWorkRequest: WorkRequest = OneTimeWorkRequest.Builder(UpdateWorker::class.java)
+            .setConstraints(constraints)
+            .build()
+
+        WorkManager.getInstance(this).enqueue(myWorkRequest)
     }
 
     override fun onSupportNavigateUp(): Boolean {

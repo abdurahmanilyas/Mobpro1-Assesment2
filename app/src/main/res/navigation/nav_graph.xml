@@ -16,6 +16,9 @@
         <action
             android:id="@+id/action_itemListFragment_to_addItemFragment"
             app:destination="@id/addItemFragment" />
+        <action
+            android:id="@+id/action_itemListFragment_to_goodsFragment"
+            app:destination="@id/goodsFragment" />
     </fragment>
     <fragment
         android:id="@+id/itemDetailFragment"
@@ -47,4 +50,9 @@
             app:popUpTo="@id/itemListFragment"
             app:popUpToInclusive="true" />
     </fragment>
+    <fragment
+        android:id="@+id/goodsFragment"
+        android:name="com.assesment2.stockmobile.ui.GoodsFragment"
+        android:label="Goods View"
+        tools:layout="@layout/fragment_goods"/>
 </navigation>

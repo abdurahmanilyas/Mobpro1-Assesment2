@@ -55,5 +55,11 @@ class ItemListFragment : Fragment() {
             )
             this.findNavController().navigate(action)
         }
+
+        binding.floatingActionButton2.setOnClickListener{
+            findNavController().navigate(R.id.action_itemListFragment_to_goodsFragment)
+        }
+
+        viewModel.scheduleUpdater(requireActivity().application)
     }
 }

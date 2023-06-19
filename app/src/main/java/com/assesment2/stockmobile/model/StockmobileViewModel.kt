@@ -1,13 +1,18 @@
 package com.assesment2.stockmobile
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.viewModelScope
+import android.app.Application
+import android.util.Log
+import androidx.lifecycle.*
+import androidx.work.*
 import com.assesment2.stockmobile.data.Item
 import com.assesment2.stockmobile.data.ProductDao
+import com.assesment2.stockmobile.model.Goods
+import com.assesment2.stockmobile.network.ApiStatus
+import com.assesment2.stockmobile.network.StockApi
+import com.assesment2.stockmobile.network.UpdateWorker
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 
 
 class InventoryViewModel(private val productDao: ProductDao) : ViewModel() {
@@ -103,6 +108,49 @@ class InventoryViewModel(private val productDao: ProductDao) : ViewModel() {
             itemPrice = itemPrice.toDouble(),
             quantityInStock = itemCount.toInt()
         )
+    }
+
+    private val data = MutableLiveData<List<Goods>>()
+    private val status = MutableLiveData<ApiStatus>()
+    init {
+        retrieveData()
+    }
+    private fun retrieveData() {
+        viewModelScope.launch (Dispatchers.IO) {
+            status.postValue(ApiStatus.LOADING)
+            try {
+                val result = StockApi.service.getRate()
+                Log.d("MainViewModel", "Success: $result")
+                data.postValue(StockApi.service.getRate())
+                status.postValue(ApiStatus.SUCCESS)
+            } catch (e: Exception) {
+                Log.d("MainViewModel", "Failure: ${e.message}")
+                status.postValue(ApiStatus.FAILED)
+            }
+        }
+    }
+    fun getStatus(): LiveData<ApiStatus> = status
+    fun getData(): LiveData<List<Goods>> = data
+
+    fun scheduleUpdater(app: Application) {
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.NOT_REQUIRED)
+            .build()
+
+        val myRequest = PeriodicWorkRequest.Builder(
+            UpdateWorker::class.java,
+            15,
+            TimeUnit.MINUTES
+        ).setConstraints(constraints)
+            .addTag("my_id")
+            .build()
+
+        WorkManager.getInstance(app)
+            .enqueueUniquePeriodicWork(
+                "my_id",
+                ExistingPeriodicWorkPolicy.KEEP,
+                myRequest
+            )
     }
 }
 
